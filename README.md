@@ -1,12 +1,12 @@
-# tinylibiconv : Overview
+# Libiconv Lite : Overview
 
-tinylibiconv is Microsoft Windows port of [GNU libiconv](https://www.gnu.org/software/libiconv)
+llibiconv is Microsoft Windows port of [GNU libiconv](https://www.gnu.org/software/libiconv)
 project providing only the library part of libiconv project.
 
 Headers and make files are manually created from original template
 files, meaning that there is no need for additional configuration steps.
 
-Source files are kept intact ensuring that tinylibiconv will behave
+Source files are kept intact ensuring that llibiconv will behave
 exactly the same as libiconv.
 
 # License
