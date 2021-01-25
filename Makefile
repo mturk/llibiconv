@@ -66,6 +66,9 @@ OBJECTS = \
 	$(WORKDIR)\localcharset.obj \
 	$(WORKDIR)\iconv.obj
 
+!IF "$(TARGET)" == "dll"
+OBJECTS = $(OBJECTS) $(WORKDIR)\libiconv.res
+!ENDIF
 
 all : $(WORKDIR) $(OUTPUT)
 
@@ -81,11 +84,10 @@ $(WORKDIR) :
 {$(SRCDIR)\windows}.rc{$(WORKDIR)}.res:
 	$(RC) $(RFLAGS) /fo $@ $<
 
-!IF "$(TARGET)" == "dll"
-$(OUTPUT): $(WORKDIR) $(OBJECTS) $(WORKDIR)\libiconv.res
-	$(LN) $(LFLAGS) $(OBJECTS) $(WORKDIR)\libiconv.res $(LDLIBS) /out:$(OUTPUT)
-!ELSE
 $(OUTPUT): $(WORKDIR) $(OBJECTS)
+!IF "$(TARGET)" == "dll"
+	$(LN) $(LFLAGS) $(OBJECTS) $(LDLIBS) /out:$(OUTPUT)
+!ELSE
 	$(AR) $(LFLAGS) $(OBJECTS) /out:$(OUTPUT)
 !ENDIF
 
