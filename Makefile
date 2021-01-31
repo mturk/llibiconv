@@ -100,19 +100,19 @@ $(OUTPUT): $(WORKDIR) $(OBJECTS)
 	$(AR) $(ARFLAGS) $(OBJECTS) /out:$(OUTPUT)
 !ENDIF
 
-!IF !DEFINED(PREFIX) || "$(PREFIX)" == ""
+!IF !DEFINED(INSTALLDIR) || "$(INSTALLDIR)" == ""
 install:
-	@echo PREFIX is not defined
-	@echo Use `nmake install PREFIX=directory`
+	@echo INSTALLDIR is not defined
+	@echo Use `nmake install INSTALLDIR=directory`
 	@echo.
 	@exit /B 1
 !ELSE
 install : all
 !IF "$(TARGET)" == "dll"
-	@xcopy /I /Y /Q "$(WORKDIR)\*.dll" "$(PREFIX)\bin"
+	@xcopy /I /Y /Q "$(WORKDIR)\*.dll" "$(INSTALLDIR)\bin"
 !ENDIF
-	@xcopy /I /Y /Q "$(WORKDIR)\*.lib" "$(PREFIX)\$(TARGET_LIB)"
-	@xcopy /I /Y /Q "$(SRCDIR)\include\*.h" "$(PREFIX)\include"
+	@xcopy /I /Y /Q "$(WORKDIR)\*.lib" "$(INSTALLDIR)\$(TARGET_LIB)"
+	@xcopy /I /Y /Q "$(SRCDIR)\include\*.h" "$(INSTALLDIR)\include"
 !ENDIF
 
 clean:

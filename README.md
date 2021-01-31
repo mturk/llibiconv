@@ -115,11 +115,11 @@ This will remove all produced binaries and object files
 by deleting **x64** subdirectory.
 
 ```cmd
-> nmake install PREFIX=C:\some\directory
+> nmake install INSTALLDIR=C:\some\directory
 ```
 
 Standard makefile install target that will
-copy the executables, libraries and include files to the PREFIX location.
+copy the executables, libraries and include files to the INSTALLDIR location.
 
 This can be useful if you are building Llibiconv with
 some Continuous build application that needs produced
