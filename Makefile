@@ -66,13 +66,11 @@ LDFLAGS = /nologo /INCREMENTAL:NO /OPT:REF /DLL /DEBUG /SUBSYSTEM:CONSOLE /MACHI
 
 WORKDIR = $(CPU)-rel-$(TARGET)
 OUTPUT  = $(WORKDIR)\$(PROJECT).$(TARGET)
-
-OUTFLAGS = -Fo$(WORKDIR)\ -Fd$(WORKDIR)\$(PROJECT)
-BUILDPDB = $(WORKDIR)\$(PROJECT).pdb
-CLOPTS = /c /nologo /wd4244 /wd4267 /wd4090 /wd4018 $(CRT_CFLAGS) -W3 -O2 -Ob2 -Zi
-RFLAGS = /l 0x409 /n /d NDEBUG /d WIN32 /d WINNT /d WINVER=$(WINVER)
-RFLAGS = $(RFLAGS) /d _WIN32_WINNT=$(WINVER) $(EXTRA_RFLAGS)
-LDLIBS = kernel32.lib $(EXTRA_LIBS)
+OUTPDB  = $(WORKDIR)\$(PROJECT).pdb
+CLOPTS  = /c /nologo /wd4244 /wd4267 /wd4090 /wd4018 $(CRT_CFLAGS) -W3 -O2 -Ob2 -Zi
+RFLAGS  = /l 0x409 /n /d NDEBUG /d WIN32 /d WINNT /d WINVER=$(WINVER)
+RFLAGS  = $(RFLAGS) /d _WIN32_WINNT=$(WINVER) $(EXTRA_RFLAGS)
+LDLIBS  = kernel32.lib $(EXTRA_LIBS)
 
 
 OBJECTS = \
@@ -89,17 +87,17 @@ $(WORKDIR) :
 	@-md $(WORKDIR)
 
 {$(SRCDIR)\lib}.c{$(WORKDIR)}.obj:
-	$(CC) $(CLOPTS) $(CFLAGS) $(OUTFLAGS) $<
+	$(CC) $(CLOPTS) $(CFLAGS) -Fo$(WORKDIR)\ -Fd$(WORKDIR)\$(PROJECT) $<
 
 {$(SRCDIR)\libcharset\lib}.c{$(WORKDIR)}.obj:
-	$(CC) $(CLOPTS) $(CFLAGS) $(OUTFLAGS) $<
+	$(CC) $(CLOPTS) $(CFLAGS) -Fo$(WORKDIR)\ -Fd$(WORKDIR)\$(PROJECT) $<
 
 {$(SRCDIR)\windows}.rc{$(WORKDIR)}.res:
 	$(RC) $(RFLAGS) /fo $@ $<
 
 $(OUTPUT): $(WORKDIR) $(OBJECTS)
 !IF "$(TARGET)" == "dll"
-	$(LN) $(LDFLAGS) $(OBJECTS) $(LDLIBS) /pdb:$(BUILDPDB) /out:$(OUTPUT)
+	$(LN) $(LDFLAGS) $(OBJECTS) $(LDLIBS) /pdb:$(OUTPDB) /out:$(OUTPUT)
 !ELSE
 	$(AR) $(ARFLAGS) $(OBJECTS) /out:$(OUTPUT)
 !ENDIF
