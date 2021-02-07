@@ -61,13 +61,15 @@ ARFLAGS = /nologo /SUBSYSTEM:CONSOLE /MACHINE:$(CPU) $(EXTRA_ARFLAGS)
 TARGET  = dll
 CFLAGS  = $(CFLAGS) -DBUILDING_LIBICONV
 PROJECT = libiconv-1
-LDFLAGS = /nologo /INCREMENTAL:NO /OPT:REF /DLL /SUBSYSTEM:CONSOLE /MACHINE:$(CPU) $(EXTRA_LDFLAGS)
+LDFLAGS = /nologo /INCREMENTAL:NO /OPT:REF /DLL /DEBUG /SUBSYSTEM:CONSOLE /MACHINE:$(CPU) $(EXTRA_LDFLAGS)
 !ENDIF
 
 WORKDIR = $(CPU)-rel-$(TARGET)
 OUTPUT  = $(WORKDIR)\$(PROJECT).$(TARGET)
 
-CLOPTS = /c /nologo /wd4244 /wd4267 /wd4090 /wd4018 $(CRT_CFLAGS) -W3 -O2 -Ob2
+OUTFLAGS = -Fo$(WORKDIR)\ -Fd$(WORKDIR)\$(PROJECT)
+BUILDPDB = $(WORKDIR)\$(PROJECT).pdb
+CLOPTS = /c /nologo /wd4244 /wd4267 /wd4090 /wd4018 $(CRT_CFLAGS) -W3 -O2 -Ob2 -Zi
 RFLAGS = /l 0x409 /n /d NDEBUG /d WIN32 /d WINNT /d WINVER=$(WINVER)
 RFLAGS = $(RFLAGS) /d _WIN32_WINNT=$(WINVER) $(EXTRA_RFLAGS)
 LDLIBS = kernel32.lib $(EXTRA_LIBS)
@@ -87,17 +89,17 @@ $(WORKDIR) :
 	@-md $(WORKDIR)
 
 {$(SRCDIR)\lib}.c{$(WORKDIR)}.obj:
-	$(CC) $(CLOPTS) $(CFLAGS) -Fo$(WORKDIR)\ $<
+	$(CC) $(CLOPTS) $(CFLAGS) $(OUTFLAGS) $<
 
 {$(SRCDIR)\libcharset\lib}.c{$(WORKDIR)}.obj:
-	$(CC) $(CLOPTS) $(CFLAGS) -Fo$(WORKDIR)\ $<
+	$(CC) $(CLOPTS) $(CFLAGS) $(OUTFLAGS) $<
 
 {$(SRCDIR)\windows}.rc{$(WORKDIR)}.res:
 	$(RC) $(RFLAGS) /fo $@ $<
 
 $(OUTPUT): $(WORKDIR) $(OBJECTS)
 !IF "$(TARGET)" == "dll"
-	$(LN) $(LDFLAGS) $(OBJECTS) $(LDLIBS) /out:$(OUTPUT)
+	$(LN) $(LDFLAGS) $(OBJECTS) $(LDLIBS) /pdb:$(BUILDPDB) /out:$(OUTPUT)
 !ELSE
 	$(AR) $(ARFLAGS) $(OBJECTS) /out:$(OUTPUT)
 !ENDIF
@@ -113,6 +115,7 @@ install : all
 !IF "$(TARGET)" == "dll"
 	@xcopy /I /Y /Q "$(WORKDIR)\*.dll" "$(INSTALLDIR)\bin"
 !ENDIF
+	@xcopy /I /Y /Q "$(WORKDIR)\*.pdb" "$(INSTALLDIR)\bin"
 	@xcopy /I /Y /Q "$(WORKDIR)\*.lib" "$(INSTALLDIR)\$(TARGET_LIB)"
 	@xcopy /I /Y /Q "$(SRCDIR)\include\*.h" "$(INSTALLDIR)\include"
 !ENDIF
