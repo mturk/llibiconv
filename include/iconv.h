@@ -22,10 +22,10 @@
 
 #define _LIBICONV_VERSION 0x0110    /* version number: (major<<8) + minor */
 
-#if defined(ICONV_DECLARE_STATIC)
+#if defined(LIBICONV_STATIC)
 #define ICONV_DECLARE(type)            type
 #define ICONV_DECLARE_DATA
-#elif defined(ICONV_DECLARE_EXPORT)
+#elif defined(BUILDING_LIBICONV)
 #define ICONV_DECLARE(type)            __declspec(dllexport) type
 #define ICONV_DECLARE_DATA             __declspec(dllexport)
 #else
