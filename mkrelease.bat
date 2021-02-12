@@ -34,8 +34,8 @@ set "BuildDir=%cd%"
 popd
 rem
 rem Create builds
-nmake "INSTALLDIR=%BuildDir%\dist\%ReleaseName%" %~3 _STATIC=1 install
-nmake "INSTALLDIR=%BuildDir%\dist\%ReleaseName%" %~3 install
+nmake "INSTALLDIR=%BuildDir%\dist\%ReleaseName%" %~3 %~4 _STATIC=1 install
+nmake "INSTALLDIR=%BuildDir%\dist\%ReleaseName%" %~3 %~4 install
 rem
 rem Set path for ClamAV and 7za
 rem
