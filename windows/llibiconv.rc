@@ -1,0 +1,56 @@
+/* Resources for llibiconv.dll */
+
+#include <windows.h>
+
+#define CPP_TOSTR_HELPER(n)         #n
+#define CPP_TOSTR(n)                CPP_TOSTR_HELPER(n)
+
+#define PACKAGE_VERSION_MAJOR       1
+#define PACKAGE_VERSION_MINOR       16
+#define PACKAGE_VERSION_SUBMINOR    0
+#define PACKAGE_VERSION_VENDOR     "_3"
+#define PACKAGE_NAME               "llibiconv"
+#define PACKAGE_VERSION_STRING \
+                          CPP_TOSTR(PACKAGE_VERSION_MAJOR),     \
+                          CPP_TOSTR(PACKAGE_VERSION_MINOR),     \
+                          CPP_TOSTR(PACKAGE_VERSION_SUBMINOR_)  \
+                          PACKAGE_VERSION_VENDOR
+                          
+#define PACKAGE_VERSION_CSV         PACKAGE_VERSION_MAJOR,      \
+                                    PACKAGE_VERSION_MINOR,      \
+                                    PACKAGE_VERSION_SUBMINOR
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION PACKAGE_VERSION_CSV,0
+ PRODUCTVERSION PACKAGE_VERSION_CSV,0
+ FILEFLAGSMASK VS_FFI_FILEFLAGSMASK
+#ifdef _DEBUG
+ FILEFLAGS VS_FF_DEBUG
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS VOS_NT_WINDOWS32
+ FILETYPE VFT_DLL
+ FILESUBTYPE 0x0L  /* VFT2_UNKNOWN */
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904b0"  /* Lang = US English, Charset = Unicode */
+        BEGIN
+            VALUE "Comments", "This library is free software; you can redistribute it and/or modify it under the terms of the GNU Library General Public License. You should have received a copy of the GNU Library General Public License along with this library; if not, see <https://www.gnu.org/licenses/>."
+            VALUE "CompanyName", "Free Software Foundation"
+            VALUE "FileDescription", "LGPLed libiconv for Windows"
+            VALUE "FileVersion", PACKAGE_VERSION_STRING
+            VALUE "InternalName", PACKAGE_NAME "-1.dll"
+            VALUE "LegalCopyright", "Copyright (C) 1999-2019\0"
+            VALUE "LegalTrademarks", "Free Software Foundation"
+            VALUE "OriginalFilename", PACKAGE_NAME "-1.dll"
+            VALUE "ProductName", "libiconv: character set conversion library"
+            VALUE "ProductVersion", PACKAGE_VERSION_STRING
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x0409, 1200  /* US English, Unicode */
+    END
+END

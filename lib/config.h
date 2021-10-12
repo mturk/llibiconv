@@ -1,3 +1,4 @@
+/* Manually crafted */
 /* Copyright (C) 1999-2003, 2005, 2007, 2010, 2012 Free Software Foundation, Inc.
    This file is part of the GNU LIBICONV Library.
 
@@ -19,21 +20,23 @@
 
 /* Define to 1 to enable a few rarely used encodings. */
 #define ENABLE_EXTRA 1
+/* Define to 1 if the package shall run at any location in the filesystem. */
+#define ENABLE_RELOCATABLE 1
 
 /* Define as const if the declaration of iconv() needs const. */
-#define ICONV_CONST const
-
+#define ICONV_CONST
 /* Define to 1 if you have the setlocale() function. */
 #define HAVE_SETLOCALE 1
-
 /* Define to 1 if you have the <stddef.h> header file. */
 #define HAVE_STDDEF_H 1
-
 /* Define to 1 if you have the <stdlib.h> header file. */
 #define HAVE_STDLIB_H 1
-
 /* Define to 1 if you have the <string.h> header file. */
 #define HAVE_STRING_H 1
+/* Define if you have the mbrtowc() function. */
+#define HAVE_MBRTOWC 1
+/* Define if you have the wcrtomb() function. */
+#define HAVE_WCRTOMB 1
 
 /* Define if the machine's byte ordering is little endian. */
 #define WORDS_LITTLEENDIAN 1

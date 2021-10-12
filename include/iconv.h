@@ -22,19 +22,17 @@
 
 #define _LIBICONV_VERSION 0x0110    /* version number: (major<<8) + minor */
 
-#if defined(LIBICONV_STATIC)
-#define ICONV_DECLARE(type)            type
-#define ICONV_DECLARE_DATA
-#elif defined(BUILDING_LIBICONV)
-#define ICONV_DECLARE(type)            __declspec(dllexport) type
-#define ICONV_DECLARE_DATA             __declspec(dllexport)
+#if defined(BUILDING_LIBICONV)
+#define LIBICONV_DLL_EXPORTED __declspec(dllexport)
 #else
-#define ICONV_DECLARE(type)            __declspec(dllimport) type
-#define ICONV_DECLARE_DATA             __declspec(dllimport)
+#if defined(LIBICONV_STATIC)
+#define LIBICONV_DLL_EXPORTED
+#else
+#define LIBICONV_DLL_EXPORTED __declspec(dllimport)
+#endif
 #endif
 
-
-ICONV_DECLARE_DATA int _libiconv_version; /* Likewise */
+extern LIBICONV_DLL_EXPORTED int _libiconv_version; /* Likewise */
 
 /* We would like to #include any system header file which could define
    iconv_t, 1. in order to eliminate the risk that the user gets compilation
@@ -64,45 +62,74 @@ typedef void* iconv_t;
 
 /* Get errno declaration and values. */
 #include <errno.h>
+/* Some systems, like SunOS 4, don't have EILSEQ. Some systems, like BSD/OS,
+   have EILSEQ in a different header.  On these systems, define EILSEQ
+   ourselves. */
+#ifndef EILSEQ
+#define EILSEQ 
+#endif
+
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 
-/* Allocates descriptor for code conversion from encoding `fromcode' to
-   encoding `tocode'. */
+/* Allocates descriptor for code conversion from encoding ‘fromcode’ to
+   encoding ‘tocode’. */
 #ifndef LIBICONV_PLUG
 #define iconv_open libiconv_open
 #endif
-ICONV_DECLARE(iconv_t) iconv_open (const char* tocode, const char* fromcode);
+extern LIBICONV_DLL_EXPORTED iconv_t iconv_open (const char* tocode, const char* fromcode);
 
-/* Converts, using conversion descriptor `cd', at most `*inbytesleft' bytes
-   starting at `*inbuf', writing at most `*outbytesleft' bytes starting at
-   `*outbuf'.
-   Decrements `*inbytesleft' and increments `*inbuf' by the same amount.
-   Decrements `*outbytesleft' and increments `*outbuf' by the same amount. */
+/* Converts, using conversion descriptor ‘cd’, at most ‘*inbytesleft’ bytes
+   starting at ‘*inbuf’, writing at most ‘*outbytesleft’ bytes starting at
+   ‘*outbuf’.
+   Decrements ‘*inbytesleft’ and increments ‘*inbuf’ by the same amount.
+   Decrements ‘*outbytesleft’ and increments ‘*outbuf’ by the same amount. */
 #ifndef LIBICONV_PLUG
 #define iconv libiconv
 #endif
-ICONV_DECLARE(size_t) iconv (iconv_t cd, const char* * inbuf, size_t *inbytesleft, char* * outbuf, size_t *outbytesleft);
+extern LIBICONV_DLL_EXPORTED size_t iconv (iconv_t cd,  char* * inbuf, size_t *inbytesleft, char* * outbuf, size_t *outbytesleft);
 
-/* Frees resources allocated for conversion descriptor `cd'. */
+/* Frees resources allocated for conversion descriptor ‘cd’. */
 #ifndef LIBICONV_PLUG
 #define iconv_close libiconv_close
 #endif
-ICONV_DECLARE(int) iconv_close (iconv_t cd);
+extern LIBICONV_DLL_EXPORTED int iconv_close (iconv_t cd);
+
+
+#ifdef __cplusplus
+}
+#endif
 
 
 #ifndef LIBICONV_PLUG
 
 /* Nonstandard extensions. */
 
+#if 1
+#if 0
+/* Tru64 with Desktop Toolkit C has a bug: <stdio.h> must be included before
+   <wchar.h>.
+   BSD/OS 4.0.1 has a bug: <stddef.h>, <stdio.h> and <time.h> must be
+   included before <wchar.h>.  */
+#include <stddef.h>
+#include <stdio.h>
+#include <time.h>
+#endif
+#include <wchar.h>
+#endif
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* A type that holds all memory needed by a conversion descriptor.
    A pointer to such an object can be used as an iconv_t. */
 typedef struct {
   void* dummy1[28];
-#if 0
+#if 1
   mbstate_t dummy2;
 #endif
 } iconv_allocation_t;
@@ -111,12 +138,12 @@ typedef struct {
    encoding ‘tocode’ into preallocated memory. Returns an error indicator
    (0 or -1 with errno set). */
 #define iconv_open_into libiconv_open_into
-ICONV_DECLARE(int) iconv_open_into (const char* tocode, const char* fromcode,
+extern LIBICONV_DLL_EXPORTED int iconv_open_into (const char* tocode, const char* fromcode,
                             iconv_allocation_t* resultp);
 
 /* Control of attributes. */
 #define iconvctl libiconvctl
-ICONV_DECLARE(int) iconvctl (iconv_t cd, int request, void* argument);
+extern LIBICONV_DLL_EXPORTED int iconvctl (iconv_t cd, int request, void* argument);
 
 /* Hook performed after every successful conversion of a Unicode character. */
 typedef void (*iconv_unicode_char_hook) (unsigned int uc, void* data);
@@ -149,7 +176,7 @@ typedef void (*iconv_unicode_uc_to_mb_fallback)
                                          void* callback_arg),
               void* callback_arg,
               void* data);
-
+#if 1
 /* Fallback function.  Invoked when a number of bytes could not be converted to
    a wide character.  This function should process all bytes from inbuf and may
    produce replacement wide characters by calling the write_replacement
@@ -170,7 +197,12 @@ typedef void (*iconv_wchar_wc_to_mb_fallback)
                                          void* callback_arg),
               void* callback_arg,
               void* data);
-
+#else
+/* If the wchar_t type does not exist, these two fallback functions are never
+   invoked.  Their argument list therefore does not matter.  */
+typedef void (*iconv_wchar_mb_to_wc_fallback) ();
+typedef void (*iconv_wchar_wc_to_mb_fallback) ();
+#endif
 /* Set of fallbacks. */
 struct iconv_fallbacks {
   iconv_unicode_mb_to_uc_fallback mb_to_uc_fallback;
@@ -191,19 +223,30 @@ struct iconv_fallbacks {
 
 /* Listing of locale independent encodings. */
 #define iconvlist libiconvlist
-ICONV_DECLARE(void) iconvlist (int (*do_one) (unsigned int namescount,
-                               const char * const * names,
-                               void* data),
-                               void* data);
+extern LIBICONV_DLL_EXPORTED void iconvlist (int (*do_one) (unsigned int namescount,
+                                      const char * const * names,
+                                      void* data),
+                       void* data);
 
 /* Canonicalize an encoding name.
    The result is either a canonical encoding name, or name itself. */
-ICONV_DECLARE(const char *) iconv_canonicalize (const char * name);
+extern LIBICONV_DLL_EXPORTED const char * iconv_canonicalize (const char * name);
 
-#endif
+/* Support for relocatable packages.  */
+
+/* Sets the original and the current installation prefix of the package.
+   Relocation simply replaces a pathname starting with the original prefix
+   by the corresponding pathname with the current prefix instead.  Both
+   prefixes should be directory names without trailing slash (i.e. use ""
+   instead of "/").  */
+extern LIBICONV_DLL_EXPORTED void libiconv_set_relocation_prefix (const char *orig_prefix,
+                                            const char *curr_prefix);
 
 #ifdef __cplusplus
 }
 #endif
+
+#endif
+
 
 #endif /* _LIBICONV_H */
