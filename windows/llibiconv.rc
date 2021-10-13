@@ -1,4 +1,4 @@
-/* Resources for llibiconv.dll */
+/* Resources for llibiconv-1.dll */
 
 #include <windows.h>
 
@@ -8,21 +8,33 @@
 #define PACKAGE_VERSION_MAJOR       1
 #define PACKAGE_VERSION_MINOR       16
 #define PACKAGE_VERSION_SUBMINOR    0
-#define PACKAGE_VERSION_VENDOR     "_3"
-#define PACKAGE_NAME               "llibiconv"
+#define PACKAGE_NAME               "llibiconv-1"
+#if defined(_VENDOR_NUM)
+# define PACKAGE_VERSION_MICRO     _VENDOR_NUM
+#else
+# define PACKAGE_VERSION_MICRO     0
+#endif
+#if defined(_VENDOR_SFX)
+# define PACKAGE_VERSION_VENDOR    CPP_TOSTR(_VENDOR_SFX)
+#else
+# define PACKAGE_VERSION_VENDOR    ""
+#endif
+
+
 #define PACKAGE_VERSION_STRING \
-                          CPP_TOSTR(PACKAGE_VERSION_MAJOR),     \
-                          CPP_TOSTR(PACKAGE_VERSION_MINOR),     \
-                          CPP_TOSTR(PACKAGE_VERSION_SUBMINOR_)  \
+                          CPP_TOSTR(PACKAGE_VERSION_MAJOR) "."  \
+                          CPP_TOSTR(PACKAGE_VERSION_MINOR) "."  \
+                          CPP_TOSTR(PACKAGE_VERSION_SUBMINOR)   \
                           PACKAGE_VERSION_VENDOR
                           
 #define PACKAGE_VERSION_CSV         PACKAGE_VERSION_MAJOR,      \
                                     PACKAGE_VERSION_MINOR,      \
-                                    PACKAGE_VERSION_SUBMINOR
+                                    PACKAGE_VERSION_SUBMINOR,   \
+                                    PACKAGE_VERSION_MICRO
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION PACKAGE_VERSION_CSV,0
- PRODUCTVERSION PACKAGE_VERSION_CSV,0
+ FILEVERSION PACKAGE_VERSION_CSV
+ PRODUCTVERSION PACKAGE_VERSION_CSV
  FILEFLAGSMASK VS_FFI_FILEFLAGSMASK
 #ifdef _DEBUG
  FILEFLAGS VS_FF_DEBUG
@@ -39,13 +51,13 @@ BEGIN
         BEGIN
             VALUE "Comments", "This library is free software; you can redistribute it and/or modify it under the terms of the GNU Library General Public License. You should have received a copy of the GNU Library General Public License along with this library; if not, see <https://www.gnu.org/licenses/>."
             VALUE "CompanyName", "Free Software Foundation"
-            VALUE "FileDescription", "LGPLed libiconv for Windows"
+            VALUE "FileDescription", "LGPLed lite version of libiconv for Windows"
             VALUE "FileVersion", PACKAGE_VERSION_STRING
-            VALUE "InternalName", PACKAGE_NAME "-1.dll"
+            VALUE "InternalName", PACKAGE_NAME
             VALUE "LegalCopyright", "Copyright (C) 1999-2019\0"
             VALUE "LegalTrademarks", "Free Software Foundation"
-            VALUE "OriginalFilename", PACKAGE_NAME "-1.dll"
-            VALUE "ProductName", "libiconv: character set conversion library"
+            VALUE "OriginalFilename", PACKAGE_NAME ".dll"
+            VALUE "ProductName", PACKAGE_NAME ": character set conversion library"
             VALUE "ProductVersion", PACKAGE_VERSION_STRING
         END
     END
