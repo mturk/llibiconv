@@ -22,10 +22,10 @@
 
 #define _LIBICONV_VERSION 0x0110    /* version number: (major<<8) + minor */
 
-#if defined(BUILDING_LIBICONV)
-#define LIBICONV_DLL_EXPORTED __declspec(dllexport)
-#else
+#if defined(LIBICONV_STATIC)
 #define LIBICONV_DLL_EXPORTED
+#else
+#define LIBICONV_DLL_EXPORTED __declspec(dllimport)
 #endif
 
 extern LIBICONV_DLL_EXPORTED int _libiconv_version; /* Likewise */
@@ -55,16 +55,8 @@ typedef void* iconv_t;
 /* Get size_t declaration.
    Get wchar_t declaration if it exists. */
 #include <stddef.h>
-
 /* Get errno declaration and values. */
 #include <errno.h>
-/* Some systems, like SunOS 4, don't have EILSEQ. Some systems, like BSD/OS,
-   have EILSEQ in a different header.  On these systems, define EILSEQ
-   ourselves. */
-#ifndef EILSEQ
-#define EILSEQ 
-#endif
-
 
 #ifdef __cplusplus
 extern "C" {
@@ -103,17 +95,6 @@ extern LIBICONV_DLL_EXPORTED int iconv_close (iconv_t cd);
 #ifndef LIBICONV_PLUG
 
 /* Nonstandard extensions. */
-
-#if 1
-#if 0
-/* Tru64 with Desktop Toolkit C has a bug: <stdio.h> must be included before
-   <wchar.h>.
-   BSD/OS 4.0.1 has a bug: <stddef.h>, <stdio.h> and <time.h> must be
-   included before <wchar.h>.  */
-#include <stddef.h>
-#include <stdio.h>
-#include <time.h>
-#endif
 #include <wchar.h>
 #endif
 
@@ -125,9 +106,7 @@ extern "C" {
    A pointer to such an object can be used as an iconv_t. */
 typedef struct {
   void* dummy1[28];
-#if 1
   mbstate_t dummy2;
-#endif
 } iconv_allocation_t;
 
 /* Allocates descriptor for code conversion from encoding ‘fromcode’ to
@@ -172,7 +151,6 @@ typedef void (*iconv_unicode_uc_to_mb_fallback)
                                          void* callback_arg),
               void* callback_arg,
               void* data);
-#if 1
 /* Fallback function.  Invoked when a number of bytes could not be converted to
    a wide character.  This function should process all bytes from inbuf and may
    produce replacement wide characters by calling the write_replacement
@@ -193,12 +171,6 @@ typedef void (*iconv_wchar_wc_to_mb_fallback)
                                          void* callback_arg),
               void* callback_arg,
               void* data);
-#else
-/* If the wchar_t type does not exist, these two fallback functions are never
-   invoked.  Their argument list therefore does not matter.  */
-typedef void (*iconv_wchar_mb_to_wc_fallback) ();
-typedef void (*iconv_wchar_wc_to_mb_fallback) ();
-#endif
 /* Set of fallbacks. */
 struct iconv_fallbacks {
   iconv_unicode_mb_to_uc_fallback mb_to_uc_fallback;
@@ -243,6 +215,4 @@ extern LIBICONV_DLL_EXPORTED void libiconv_set_relocation_prefix (const char *or
 #endif
 
 #endif
-
-
 #endif /* _LIBICONV_H */
