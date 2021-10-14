@@ -40,7 +40,7 @@ Open command prompt in the directory where you have
 downloaded or cloned Llibiconv and do the following
 
 ```cmd
-> C:\cmsc-15.0_33\setenv.bat
+> C:\cmsc-15.0_39\setenv.bat
 Using default architecture: x64
 Setting build environment for win-x64/0x0601
 
