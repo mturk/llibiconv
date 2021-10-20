@@ -21,15 +21,8 @@ AR = lib.exe
 RC = rc.exe
 SRCDIR = .
 
-!IF !DEFINED(BUILD_CPU) || "$(BUILD_CPU)" == ""
-!IF DEFINED(VSCMD_ARG_TGT_ARCH)
-CPU = $(VSCMD_ARG_TGT_ARCH)
-!ELSE
-!ERROR Must specify BUILD_CPU matching compiler x86 or x64
-!ENDIF
-!ELSE
-CPU = $(BUILD_CPU)
-!ENDIF
+_CPU = x64
+_LIB = lib64
 
 !IF !DEFINED(WINVER) || "$(WINVER)" == ""
 WINVER = 0x0601
@@ -40,10 +33,6 @@ CRT_CFLAGS = -MT
 EXTRA_LIBS =
 !ELSE
 CRT_CFLAGS = -MD
-!ENDIF
-
-!IF !DEFINED(TARGET_LIB) || "$(TARGET_LIB)" == ""
-TARGET_LIB = lib
 !ENDIF
 
 CFLAGS = $(CFLAGS) -I$(SRCDIR)\include -I$(SRCDIR)\lib -I$(SRCDIR)\libcharset\include
@@ -60,12 +49,12 @@ CFLAGS = $(CFLAGS) -Drelocate=libiconv_relocate -Drelocate2=libiconv_relocate2
 !IF DEFINED(_STATIC)
 TARGET  = lib
 PROJECT = iconv-1
-ARFLAGS = /nologo /MACHINE:$(CPU) $(EXTRA_ARFLAGS)
+ARFLAGS = /nologo /MACHINE:$(_CPU) $(EXTRA_ARFLAGS)
 !ELSE
 TARGET  = dll
 CFLAGS  = $(CFLAGS) -DBUILDING_LIBICONV -DBUILDING_DLL
 PROJECT = libiconv-1
-LDFLAGS = /nologo /INCREMENTAL:NO /OPT:REF /DLL /SUBSYSTEM:WINDOWS /MACHINE:$(CPU) $(EXTRA_LDFLAGS)
+LDFLAGS = /nologo /INCREMENTAL:NO /OPT:REF /DLL /SUBSYSTEM:WINDOWS /MACHINE:$(_CPU) $(EXTRA_LDFLAGS)
 !ENDIF
 
 WORKDIR = $(CPU)-rel-$(TARGET)
@@ -118,24 +107,24 @@ $(OUTPUT): $(WORKDIR) $(OBJECTS)
 	$(AR) $(ARFLAGS) $(OBJECTS) /out:$(OUTPUT)
 !ENDIF
 
-!IF !DEFINED(INSTALLDIR) || "$(INSTALLDIR)" == ""
+!IF !DEFINED(PREFIX) || "$(PREFIX)" == ""
 install:
-	@echo INSTALLDIR is not defined
-	@echo Use `nmake install INSTALLDIR=directory`
+	@echo PREFIX is not defined
+	@echo Use `nmake install PREFIX=directory`
 	@echo.
 	@exit /B 1
 !ELSE
 install : all
-	@-md "$(INSTALLDIR)" 2>NUL
-	@-md "$(INSTALLDIR)\include" 2>NUL
+	@-md "$(PREFIX)" 2>NUL
+	@-md "$(PREFIX)\include" 2>NUL
 !IF "$(TARGET)" == "dll"
-	@xcopy /I /Y /Q "$(WORKDIR)\*.dll" "$(INSTALLDIR)\bin"
+	@xcopy /I /Y /Q "$(WORKDIR)\*.dll" "$(PREFIX)\bin"
 !ENDIF
 !IF DEFINED(_PDB)
-	@xcopy /I /Y /Q "$(WORKDIR)\*.pdb" "$(INSTALLDIR)\bin"
+	@xcopy /I /Y /Q "$(WORKDIR)\*.pdb" "$(PREFIX)\bin"
 !ENDIF
-	@xcopy /I /Y /Q "$(WORKDIR)\*.lib" "$(INSTALLDIR)\$(TARGET_LIB)"
-	@copy /Y "$(SRCDIR)\include\iconv-dist.h" "$(INSTALLDIR)\include\iconv.h" >NUL
+	@xcopy /I /Y /Q "$(WORKDIR)\*.lib" "$(PREFIX)\$(_LIB)"
+	@copy /Y "$(SRCDIR)\include\iconv-dist.h" "$(PREFIX)\include\iconv.h" >NUL
 !ENDIF
 
 clean:
