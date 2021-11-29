@@ -8,7 +8,7 @@
 #define PACKAGE_VERSION_MAJOR       1
 #define PACKAGE_VERSION_MINOR       16
 #define PACKAGE_VERSION_SUBMINOR    0
-#define PACKAGE_NAME               "libiconv-1"
+#define PACKAGE_NAME               "libiconv"
 #if defined(_VENDOR_NUM)
 # define PACKAGE_VERSION_MICRO     _VENDOR_NUM
 #else

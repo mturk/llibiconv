@@ -48,12 +48,12 @@ CFLAGS = $(CFLAGS) -Drelocate=libiconv_relocate -Drelocate2=libiconv_relocate2
 
 !IF DEFINED(_STATIC)
 TARGET  = lib
-PROJECT = iconv-1
+PROJECT = iconv
 ARFLAGS = /nologo /MACHINE:$(_CPU) $(EXTRA_ARFLAGS)
 !ELSE
 TARGET  = dll
 CFLAGS  = $(CFLAGS) -DBUILDING_LIBICONV -DBUILDING_DLL
-PROJECT = libiconv-1
+PROJECT = libiconv
 LDFLAGS = /nologo /INCREMENTAL:NO /OPT:REF /DLL /SUBSYSTEM:WINDOWS /MACHINE:$(_CPU) $(EXTRA_LDFLAGS)
 !ENDIF
 
@@ -124,7 +124,7 @@ install : all
 	@xcopy /I /Y /Q "$(WORKDIR)\*.pdb" "$(PREFIX)\bin"
 !ENDIF
 	@xcopy /I /Y /Q "$(WORKDIR)\*.lib" "$(PREFIX)\$(_LIB)"
-	@copy /Y "$(SRCDIR)\include\iconv-dist.h" "$(PREFIX)\include\iconv.h" >NUL
+	@copy /Y "$(SRCDIR)\include\iconv.h.dist" "$(PREFIX)\include\iconv.h" >NUL
 !ENDIF
 
 clean:

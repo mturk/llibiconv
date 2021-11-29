@@ -13,7 +13,7 @@ exactly the same as libiconv.
 
 The build process supports only command line tools.
 
-Llibiconv release comes with the **libiconv-1.dll**
+Llibiconv release comes with the **libiconv.dll**
 binary, libraries and header files.
 In case you wish to create your own binary build,
 download or clone Llibiconv sources and follow a
@@ -99,7 +99,7 @@ static version of the library add `_STATIC=1` as nmake parameter
 
 ```
 
-This will build **iconv-1.lib**.
+This will build **iconv.lib**.
 The binary should be inside **x64-rel-lib** subdirectory.
 
 ### Makefile targets
