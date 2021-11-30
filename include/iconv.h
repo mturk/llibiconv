@@ -22,7 +22,7 @@
 
 #define _LIBICONV_VERSION 0x0110    /* version number: (major<<8) + minor */
 
-#if defined(BUILDING_LIBICONV)
+#if defined(BUILDING_DLL)
 #define LIBICONV_DLL_EXPORTED __declspec(dllexport)
 #else
 #define LIBICONV_DLL_EXPORTED
