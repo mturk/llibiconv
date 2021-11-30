@@ -37,10 +37,16 @@
 #define HAVE_MBRTOWC 1
 /* Define if you have the wcrtomb() function. */
 #define HAVE_WCRTOMB 1
-
+/* Define to 1 if O_NOFOLLOW works. */
+#define HAVE_WORKING_O_NOFOLLOW 0
 /* Define if the machine's byte ordering is little endian. */
 #define WORDS_LITTLEENDIAN 1
 
 #define HAVE_VISIBILITY 0
+/* Define to 'int' if <sys/types.h> does not define. */
+#define mode_t int
+/* Define as a signed type of the same size as size_t. */
+#define ssize_t int
+
 #define LIBDIR "."
 
