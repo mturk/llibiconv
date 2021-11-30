@@ -56,7 +56,7 @@ BEGIN
             VALUE "InternalName", PACKAGE_NAME
             VALUE "LegalCopyright", "Copyright (C) 1999-2019\0"
             VALUE "LegalTrademarks", "Free Software Foundation"
-            VALUE "OriginalFilename", PACKAGE_NAME "-2.dll"
+            VALUE "OriginalFilename", PACKAGE_NAME "-1.dll"
             VALUE "ProductName", PACKAGE_NAME ": character set conversion library"
             VALUE "ProductVersion", PACKAGE_VERSION_STRING
         END
