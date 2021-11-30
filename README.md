@@ -3,7 +3,7 @@
 Llibiconv is Microsoft Windows port of [GNU libiconv](https://www.gnu.org/software/libiconv)
 project providing only the library part of libiconv project.
 
-Headers and make files are manually created from original template
+Headers and make files are manually modified from original template
 files, meaning that there is no need for additional configuration steps.
 
 Source files are kept intact ensuring that llibiconv will behave
@@ -13,7 +13,7 @@ exactly the same as libiconv.
 
 The build process supports only command line tools.
 
-Llibiconv release comes with the **libiconv.dll**
+Llibiconv release comes with the **libiconv-1.dll**
 binary, libraries and header files.
 In case you wish to create your own binary build,
 download or clone Llibiconv sources and follow a
@@ -99,7 +99,7 @@ static version of the library add `_STATIC=1` as nmake parameter
 
 ```
 
-This will build **iconv.lib**.
+This will build **iconvstatic.lib**.
 The binary should be inside **x64-rel-lib** subdirectory.
 
 ### Makefile targets
