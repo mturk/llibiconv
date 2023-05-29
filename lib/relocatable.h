@@ -3,16 +3,16 @@
    Written by Bruno Haible <bruno@clisp.org>, 2003.
 
    This program is free software; you can redistribute it and/or modify it
-   under the terms of the GNU Library General Public License as published
+   under the terms of the GNU Lesser General Public License as published
    by the Free Software Foundation; either version 2, or (at your option)
    any later version.
 
    This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
+   Lesser General Public License for more details.
 
-   You should have received a copy of the GNU Library General Public License
+   You should have received a copy of the GNU Lesser General Public License
    along with this program; if not, see <https://www.gnu.org/licenses/>.  */
 
 #ifndef _RELOCATABLE_H
@@ -50,14 +50,14 @@ extern RELOCATABLE_DLL_EXPORTED void
    directory.
    The returned string is either PATHNAME unmodified or a freshly allocated
    string that you can free with free() after casting it to 'char *'.  */
-extern const char * relocate (const char *pathname);
+extern RELOCATABLE_DLL_EXPORTED const char * relocate (const char *pathname);
 
 /* Returns the pathname, relocated according to the current installation
    directory.
    This function sets *ALLOCATEDP to the allocated memory, or to NULL if
    no memory allocation occurs.  So that, after you're done with the return
    value, to reclaim allocated memory, you can do: free (*ALLOCATEDP).  */
-extern const char * relocate2 (const char *pathname, char **allocatedp);
+extern RELOCATABLE_DLL_EXPORTED const char * relocate2 (const char *pathname, char **allocatedp);
 
 /* Memory management: relocate() potentially allocates memory, because it has
    to construct a fresh pathname.  If this is a problem because your program
